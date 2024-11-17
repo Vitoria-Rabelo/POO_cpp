@@ -1,0 +1,8 @@
+{
+    "patches": [
+        {
+            "label": "2024-11-17_18-56-29",
+            "content": "#include \"fn.hpp\"\n#include \"student.cpp\"\n\nint main() {\n    Student stu;\n\n    while (true) {\n        fn::write(\"$\", \"\");\n        auto line = fn::input();\n        auto args = fn::split(line, ' ');\n        fn::write(line);\n\n        if      (args[0] == \"show\")  { stu.show();                          }\n        else if (args[0] == \"enter\") { stu.enter();                         } \n        else if (args[0] == \"leave\") { stu.leave();                         }\n        else if (args[0] == \"fuel\")  { stu.fuel(+args[1]);                  }\n        else if (args[0] == \"drive\") { stu.drive(+args[1]);                 }\n\n        else if (args[0] == \"end\")   { break;                               }\n        else                         { fn::write(\"fail: comando invalido\"); }\n    }\n}\n"
+        }
+    ]
+}
