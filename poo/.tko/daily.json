@@ -1,5 +1,8 @@
 {
     "2024-11-17": [
-        "animal:100:0"
+        "animal:100:0",
+        "carro:100:0",
+        "calculadora:100:0",
+        "relogio:100:0"
     ]
 }

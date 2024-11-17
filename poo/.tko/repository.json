@@ -4,11 +4,14 @@
     "local": "",
     "expanded": [
         "campanha-principal",
-        "primeiras-classes"
+        "primeiras-classes",
+        "modificadores-de-acesso"
     ],
     "tasks": {
         "animal": "0:0:100",
-        "carro": "0:0:100"
+        "carro": "0:0:100",
+        "calculadora": "0:0:100",
+        "relogio": "0:0:100"
     },
     "flags": {
         "minimum": 0,
@@ -20,5 +23,5 @@
     },
     "new_items": [],
     "lang": "cpp",
-    "index": "calculadora"
+    "index": "relogio"
 }
