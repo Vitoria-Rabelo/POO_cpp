@@ -122,3 +122,4 @@ struct Debug
         std::cout << "Debug ativado" << std::endl;
     }
 };
+

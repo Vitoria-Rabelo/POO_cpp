@@ -7,7 +7,8 @@
         "primeiras-classes"
     ],
     "tasks": {
-        "animal": "0:0:100"
+        "animal": "0:0:100",
+        "carro": "0:0:100"
     },
     "flags": {
         "minimum": 0,
@@ -19,5 +20,5 @@
     },
     "new_items": [],
     "lang": "cpp",
-    "index": "carro"
+    "index": "calculadora"
 }
