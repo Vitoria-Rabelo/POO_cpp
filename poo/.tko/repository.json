@@ -5,13 +5,15 @@
     "expanded": [
         "campanha-principal",
         "primeiras-classes",
-        "modificadores-de-acesso"
+        "modificadores-de-acesso",
+        "agrega\u00e7\u00e3o-simples"
     ],
     "tasks": {
         "animal": "0:0:100",
         "carro": "0:0:100",
         "calculadora": "0:0:100",
-        "relogio": "0:0:100"
+        "relogio": "0:0:100",
+        "motoca": "0:0:100"
     },
     "flags": {
         "minimum": 0,
@@ -23,5 +25,5 @@
     },
     "new_items": [],
     "lang": "cpp",
-    "index": "relogio"
+    "index": "motoca"
 }

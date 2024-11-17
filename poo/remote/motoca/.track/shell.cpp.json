@@ -1,7 +1,7 @@
 {
     "patches": [
         {
-            "label": "2024-11-15_14-07-30",
+            "label": "2024-11-17_19-06-48",
             "content": "#include \"fn.hpp\"\n#include \"student.hpp\"\n\nint main() {\n    Student stu;\n\n    while (true) {\n        auto line = fn::input();\n        auto args = fn::split(line, ' ');\n        fn::write('$' + line);\n\n        if      (args[0] == \"end\"  ) { break;                              }\n\n        else if (args[0] == \"init\" ) { stu.init(+args[1]);                 }\n        else if (args[0] == \"show\" ) { stu.show();                         }\n        else if (args[0] == \"leave\") { stu.leave();                        }\n        else if (args[0] == \"honk\" ) { stu.honk();                         }\n        else if (args[0] == \"enter\") { stu.enter( args[1], +args[2]);      }\n        else if (args[0] == \"buy\"  ) { stu.buy(  +args[1]);                }\n        else if (args[0] == \"drive\") { stu.drive(+args[1]);                }\n\n        else                         { fn::write(\"fail: invalid command\"); }\n    }\n}\n"
         }
     ]
