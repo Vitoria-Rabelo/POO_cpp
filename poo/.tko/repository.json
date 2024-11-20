@@ -13,6 +13,7 @@
         "carro": "0:0:100",
         "calculadora": "0:0:100",
         "relogio": "0:0:100",
+        "grafite": "0:0:100",
         "motoca": "0:0:100"
     },
     "flags": {
@@ -25,5 +26,5 @@
     },
     "new_items": [],
     "lang": "cpp",
-    "index": "motoca"
+    "index": "grafite"
 }
