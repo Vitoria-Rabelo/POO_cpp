@@ -1,0 +1,8 @@
+{
+    "patches": [
+        {
+            "label": "2024-11-19_21-16-17",
+            "content": "#include \"fn.hpp\" // https://raw.githubusercontent.com/senapk/cppaux/master/fn.hpp\n#include \"student.hpp\"\n\nint main() {\n    Student stu(0, 0, 0);\n    while (true) {\n        auto line = fn::input();\n        auto args = fn::split(line, ' ');\n\n        fn::write(\"$\" + line);\n\n        if      (args[0] == \"end\")    { break;                                       }\n        else if (args[0] == \"init\")   { stu = Student(+args[1], +args[2], +args[3]); }\n        else if (args[0] == \"show\")   { stu.show();                                  }\n        else if (args[0] == \"play\")   { stu.play();                                  }\n        else if (args[0] == \"eat\")    { stu.eat();                                   }\n        else if (args[0] == \"sleep\")  { stu.sleep();                                 }\n        else if (args[0] == \"shower\") { stu.shower();                                }\n        else                          { fn::write(\"fail: comando invalido\");         }\n    }\n}\n"
+        }
+    ]
+}
