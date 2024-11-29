@@ -1,0 +1,16 @@
+remote: https://github.com/qxcodepoo/arcade/blob/master/Readme.md
+version: 0.0.1
+expanded:
+- campanha-principal
+- agregação-simples
+tasks: {}
+flags:
+  minimum: 0
+  reward: 0
+  percent: 0
+  admin: 0
+  skills: 0
+  devel: 0
+new_items: []
+lang: cpp
+index: configuracao-e-aquecimento
