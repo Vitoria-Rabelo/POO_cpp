@@ -1,11 +1,3 @@
-/* Relatorio:
-Passou em todos os testes
-Realizei a atividade sozinha com base na atividade anterior (motorcycle), uso de chatgpt
-para saída com casas decimais correta e ajuste do erro fail: tamanho insuficiente.
-Aprendizado  estruturação de classes que se interagem, uso de ponteiros inteligentes,
-construção e destruição do objeto.
-Tempo de Atividade: 3 horas
-*/
 #pragma once
 #include "fn.hpp"
 

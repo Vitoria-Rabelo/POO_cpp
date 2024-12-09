@@ -1,10 +1,3 @@
-/*Relatório:
-Passou em todos os testes
-Realizei sozinha a atividade, uso do chatgpt para o problema de sobrecarga do operador << e 
-std::setw(2) e std::setfill('0') para garantir 2 dígitos
-Aprendi: niveis de acesso (public e private),formatacao com sprintf, sobrecarga de operador e formato 2 digitos,
-Tempo de Atividade: 2 horas
-*/
 #pragma once
 #include "fn.hpp"
 

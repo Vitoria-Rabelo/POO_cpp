@@ -1,10 +1,3 @@
-/*Relatório:
-Passou em todos os testes
-Realizei sozinha a atividade porem o monitor Henrique Pires me ajudou a otimizar criando um metodo useBattery 
-Aprendi : quando deve "this->" para referenciar as variaveis corretamente, criar meus propios metodos para 
-otimizar, utilizacao de ponto flutuante (float) em uma saida
-Tempo de Atividade: cerca 2 horas e 30 min
-*/
 #pragma once
 #include "fn.hpp"
 

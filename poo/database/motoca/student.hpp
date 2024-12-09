@@ -1,10 +1,3 @@
-/*Relatório:
-Passou em todos os testes
-Assisti a video-aula do professor e  realizei a atividade.
-Aprendizado  sobre limpeza de memoria com destructor,lista de inicialização , usar parametro default,
-ponteiros inteligentes, auto backup,
-Tempo de Atividade: 2 horas
-*/
 #pragma once
 #include "fn.hpp"
 
