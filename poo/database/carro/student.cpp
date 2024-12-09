@@ -1,10 +1,3 @@
-/*Relatório:
-Passou em todos os testes
-Realizei sozinha a atividade com base na atividade anterior (animal)
-Aprendi: como usar incremento e decremento em c++, mensagens de erro para casos específicos, diferença
-entre return e std::cout. A lógica do método drive foi a mais complexa, testei varias vezes de formas diferentes
-Tempo de Atividade: cerca 3 horas (com algumas pausas)
-*/
 #include "fn.hpp"
 
 struct Car

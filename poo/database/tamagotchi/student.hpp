@@ -1,9 +1,3 @@
-/*Relatório:
-Passou em todos os testes
-Realizei sozinha a atividade, uso de chatgpt para testAlive;
-Aprendi: encapsulamento, setter para modificar os atributos privados.
-Tempo de Atividade: 4 horas
-*/
 #include "fn.hpp"
 
 class Pet {
