@@ -40,16 +40,19 @@ Significado das tags nas questões:
 - [ ] `@animal      :test`[Animal que nasce, cresce, morre](https://github.com/qxcodepoo/arcade/blob/master/base/animal/Readme.md)
 - [ ] `@carro       :test`[Um carro simples](https://github.com/qxcodepoo/arcade/blob/master/base/carro/Readme.md)
 - [ ] `@calculadora :test`[Uma calculadora com bateria](https://github.com/qxcodepoo/arcade/blob/master/base/calculadora/Readme.md)
+- [ ] `@enxugar     :test`[Toalha com testes](https://github.com/qxcodepoo/arcade/blob/master/base/enxugar/Readme.md)
 
 ### Modificadores de Acesso
 
 - [ ] `@chinela     :open`[Comprando uma chinela 40/41](https://github.com/qxcodepoo/arcade/blob/master/base/chinela/Readme.md)
 - [ ] `@camisa      :open`[Comprando uma camisa XG](https://github.com/qxcodepoo/arcade/blob/master/base/camisa/Readme.md)
+- [ ] `@roupa       :test`[Roupa com testes](https://github.com/qxcodepoo/arcade/blob/master/base/roupa/Readme.md)
 - [ ] `@relogio     :test`[Garante uma hora válida no relógio](https://github.com/qxcodepoo/arcade/blob/master/base/relogio/Readme.md)
 
 ### Agregação Simples
 
 - [ ] `@notebook    :open`[Notebook com carregador e bateria](https://github.com/qxcodepoo/arcade/blob/master/base/notebook/Readme.md)
+- [ ] `@motouber    :test`[MotoUber com motorista e passageiro](https://github.com/qxcodepoo/arcade/blob/master/base/motouber/Readme.md)
 - [ ] `@grafite     :test`[Porta minas de um grafite só](https://github.com/qxcodepoo/arcade/blob/master/base/grafite/Readme.md)
 - [ ] `@motoca      :test`[Crianças andando de motoca](https://github.com/qxcodepoo/arcade/blob/master/base/motoca/Readme.md)
 - [ ] `@tamagotchi  :test`[Alimente, brinque e mate](https://github.com/qxcodepoo/arcade/blob/master/base/tamagotchi/Readme.md)

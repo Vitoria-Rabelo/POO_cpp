@@ -3,7 +3,12 @@ version: 0.0.1
 expanded:
 - campanha-principal
 - agregação-simples
-tasks: {}
+tasks:
+  notebook: 0:0:100
+  motouber: 0:0:100
+  grafite: 0:0:100
+  motoca: 0:0:100
+  tamagotchi: 0:0:100
 flags:
   minimum: 0
   reward: 0
@@ -13,4 +18,4 @@ flags:
   devel: 0
 new_items: []
 lang: cpp
-index: configuracao-e-aquecimento
+index: primeiras-classes
