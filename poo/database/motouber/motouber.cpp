@@ -5,9 +5,11 @@ class Pessoa{
     private:
         std::string nome;
         int dinheiro{0};
-
     public:
-        Pessoa(std::string nome = "", int dinheiro = 0): nome(nome) , dinheiro(dinheiro){}
+        Pessoa(std::string nome, int dinheiro){
+            this->nome = nome;
+            this->dinheiro = dinheiro;
+        }
 
         std::string getNome() const{
             return nome;
@@ -17,106 +19,74 @@ class Pessoa{
             return dinheiro;
         }
 
-        void passageiroPagando(int distanciaPercorrida){
-            if(dinheiro < distanciaPercorrida){
-                dinheiro = 0;
-            }else{
-                dinheiro -= distanciaPercorrida;
-            }
-        }
+        int setDinheiro(int novoValor){
+            this->dinheiro = novoValor;
+        } 
 
-        void motoristaRecebendo(int distanciaPercorrida){
-            dinheiro += distanciaPercorrida;
-        }
-
-        std::string str() const{
-            return fn::format("{}:{}", this->nome, this->dinheiro);
+        std::string str(){
+            return this->nome, ":", this->dinheiro;
         }
 
 };
+
 
 class Moto{
     private:
         int custo{0};
+        std::shared_ptr<Pessoa>  passageiro{nullptr};
         std::shared_ptr<Pessoa> motorista{nullptr};
-        std::shared_ptr<Pessoa> passageiro{nullptr};
 
     public:
-        Moto(): custo(0) , motorista(nullptr), passageiro(nullptr){}
-
-        int getCusto() const {
-            return custo;
+        Moto(std::shared_ptr<Pessoa> passageiro, std::shared_ptr<Pessoa> motorista){
+            this->custo = 0;
+            this->passageiro = nullptr;
+            this->motorista = nullptr;
         }
 
-        std::string setDriver(std::shared_ptr<Pessoa> motoqueiro){
-            if(this->motorista != nullptr){
-                return "Falha: já existe motorista\n";
-            }
-            motorista = motoqueiro;
-            return "Motorista está na moto\n";
+        void setDriver(std::shared_ptr<Pessoa> motorista){
+            this->motorista = motorista;
         }
 
-        std::string setPass(std::shared_ptr<Pessoa> passageiro){
-            if(this->motorista == nullptr){
-                return "Falha, não há motorista\n";
-            }
+        void setPass(std::shared_ptr<Pessoa> passageiro){
             this->passageiro = passageiro;
-            return "passageiro subiu na moto\n";
         }
 
-        std::string dirigir(int distancia){
-            if(motorista == nullptr){
-                return "Falha, não há motorista\n";
-            }
-            if(passageiro == nullptr){
-                return "Falha, não há passageiro\n";
-            }
-            
-            custo += distancia;
-            return "A moto está andando\n";
+        std::string str(){
+            return fn::format("Const: {}, Driver: {}, Passenger: {}\n", this->custo, this->motorista, this->passageiro);
         }
 
-        std::string leavePass(){
-            if(passageiro == nullptr){
-                return "Falha, não há passageiro\n";
+        void dirigir(){
+            if(this->motorista == nullptr){
+                return;
             }
-            if (passageiro->getDinheiro() < custo) {
-                std::cout << "fail: Passenger does not have enough money\n";
-            }
-            motorista->motoristaRecebendo(custo);
-            passageiro->passageiroPagando(custo);
-            std::string mensagem = fn::format("{}:{} leave\n", passageiro->getNome(), passageiro->getDinheiro());
-            custo = 0;
-            passageiro = nullptr;
-            return mensagem;
         }
 
-        std::string str() const {
-            std::string motoristaStr = motorista ? motorista->str() : "None";
-            std::string passageiroStr = passageiro ? passageiro->str() : "None";
-            return fn::format("Cost: {}, Driver: {}, Passenger: {}", custo, motoristaStr, passageiroStr);
-        }
+        
+
 };
 
-
-class Adapter {
+class Adapter{
     Moto moto;
-public:
-    void setDriver(std::string nome, int dinheiro) {
-        moto.setDriver(std::make_shared<Pessoa>(nome, dinheiro));
-    }
-    void setPass(std::string nome, int dinheiro) {
-        moto.setPass(std::make_shared<Pessoa>(nome, dinheiro));
-    }
-    void drive(int distance) {
-       moto.dirigir(distance);
-    }
-    void leavePass() {
-    std::cout << moto.leavePass();
-    }
-    void show() {
-        std::cout << moto.str() << std::endl;
+    public:
+    
+    void setDriver(){
 
+    }
+
+    void setPass(){
+
+    }
+
+    void drive(){
+
+    }
+
+    void leavePass(){
+
+    }
+
+    void show(){
+        moto.str();
     }
 };
 

@@ -56,6 +56,7 @@ Significado das tags nas questões:
 - [ ] `@grafite     :test`[Porta minas de um grafite só](https://github.com/qxcodepoo/arcade/blob/master/base/grafite/Readme.md)
 - [ ] `@motoca      :test`[Crianças andando de motoca](https://github.com/qxcodepoo/arcade/blob/master/base/motoca/Readme.md)
 - [ ] `@tamagotchi  :test`[Alimente, brinque e mate](https://github.com/qxcodepoo/arcade/blob/master/base/tamagotchi/Readme.md)
+- [ ] `@charger     :test`[Notebook com TESTES](https://github.com/qxcodepoo/arcade/blob/master/base/charger/Readme.md)
 
 ### ArrayList I - Listas
 
