@@ -52,9 +52,9 @@ Significado das tags nas questões:
 ### Agregação Simples
 
 - [ ] `@notebook    :open`[Notebook com carregador e bateria](https://github.com/qxcodepoo/arcade/blob/master/base/notebook/Readme.md)
-- [ ] `@motouber    :test`[MotoUber com motorista e passageiro](https://github.com/qxcodepoo/arcade/blob/master/base/motouber/Readme.md)
-- [ ] `@grafite     :test`[Porta minas de um grafite só](https://github.com/qxcodepoo/arcade/blob/master/base/grafite/Readme.md)
 - [ ] `@motoca      :test`[Crianças andando de motoca](https://github.com/qxcodepoo/arcade/blob/master/base/motoca/Readme.md)
+- [ ] `@grafite     :test`[Porta minas de um grafite só](https://github.com/qxcodepoo/arcade/blob/master/base/grafite/Readme.md)
+- [ ] `@motouber    :test`[MotoUber com motorista e passageiro](https://github.com/qxcodepoo/arcade/blob/master/base/motouber/Readme.md)
 - [ ] `@tamagotchi  :test`[Alimente, brinque e mate](https://github.com/qxcodepoo/arcade/blob/master/base/tamagotchi/Readme.md)
 - [ ] `@charger     :test`[Notebook com TESTES](https://github.com/qxcodepoo/arcade/blob/master/base/charger/Readme.md)
 
