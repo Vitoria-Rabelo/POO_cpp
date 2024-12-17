@@ -14,6 +14,10 @@ class Carregador{
             return this->potencia;
         }
 
+        void setPotencia(int novaPotencia) {
+            this->potencia = novaPotencia;
+        }
+
         std::string str() const{
             std::stringstream ss;
             ss << "Carregador " << this->getPotencia() << "W";
@@ -100,7 +104,9 @@ class Notebook{
                 std::cout << "Removido " << this->bateria->getCarga() << "/" << this->bateria->getCapacidade() <<
                 std::endl;
                 this->bateria = nullptr;
+                if(this->carregador == nullptr){
                 this->ligado = false;
+                }
             }else{
                 std::cout << "fail: Sem bateria\n";
             }
@@ -137,7 +143,7 @@ class Notebook{
                 }  
             }
             if(this->bateria != nullptr && this->carregador != nullptr){
-                this->bateria->setCarga(this->bateria->getCarga() + tempo);
+                this->bateria->setCarga(this->bateria->getCarga() + (this->carregador->getPotencia() * tempo));
                 
             }
         }
