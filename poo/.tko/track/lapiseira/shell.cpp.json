@@ -1,0 +1,8 @@
+{
+    "patches": [
+        {
+            "label": "2024-12-19_17-23-11",
+            "content": "#include <iostream>\n#include <list>\n#include <sstream>\n#include <memory>\nusing namespace std;\n\n// Fun\u00e7\u00e3o auxiliar para mapear e juntar elementos de um container\ntemplate <typename CONTAINER, typename FUNC>\nauto map_join(const CONTAINER& c, FUNC f, const string& sep = \", \") {\n    stringstream ss;\n    for (auto it = c.begin(); it != c.end(); ++it) {\n        ss << (it != c.begin() ? sep : \"\");\n        ss << f(*it);\n    }\n    return ss.str();\n}\n\nint main() {\n    while (true) {\n        string line, cmd;\n        getline(cin, line);\n        cout << \"$\" << line << endl;\n\n        stringstream ss(line);\n        ss >> cmd;\n\n        if (cmd == \"end\") {\n            break;  \n        }\n        else if (cmd == \"show\") { \n        } \n        else if (cmd == \"init\") { \n            // float calibre;\n            // ss >> calibre;\n        } \n        else if (cmd == \"insert\") { \n            // float calibre;\n            // string dureza;\n            // int tamanho;\n            // ss >> calibre >> dureza >> tamanho;\n        } \n        else if (cmd == \"remove\") { \n        } \n        else if (cmd == \"pull\") { \n        } \n        else if (cmd == \"write\") { \n        } \n        else {\n            cout << \"fail: comando invalido\\n\";\n        }\n    }\n}\n"
+        }
+    ]
+}

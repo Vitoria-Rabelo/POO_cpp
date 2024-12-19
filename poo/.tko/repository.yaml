@@ -14,6 +14,7 @@ tasks:
   motouber: '100:0:0:0'
   tamagotchi: '100:0:0:0'
   budega: '100:0:0:0'
+  lapiseira: '7:0:0:0'
 flags:
   minimum: 0
   reward: 0
@@ -23,4 +24,4 @@ flags:
   devel: 0
 new_items: []
 lang: cpp
-index: budega
+index: lapiseira
