@@ -1,0 +1,8 @@
+{
+    "patches": [
+        {
+            "label": "2024-12-17_10-25-11",
+            "content": "#include \"fn.hpp\"\n\nclass Towel{\n    private:\n        std::string size;\n    public:\n        Towel(){\n            this->size = \"\";\n        }\n\n        std::string getSize() const{\n            return this->size;\n        }\n\n        void setSize(std::string newSize){\n            if(newSize == \"PP\" || newSize == \"P\" || newSize == \"M\" || newSize == \"GG\" ||\n                newSize == \"XG\"){\n                    this->size = newSize;\n            }else{\n                std::cout << \"fail: Valor inv\u00e1lido, tente PP, P, M, G, GG ou XG\\n\";\n            }\n\n        }\n};\n\nclass Adapter {\n    std::shared_ptr<Towel> towel;\npublic:\n    Adapter() {\n        this->towel = std::make_shared<Towel>();\n    }\n    void size(const std::string& size) {\n        this->towel->setSize(size);\n    }\n    void show() {\n        std::cout << \"size: (\" << this->towel->getSize() << \")\\n\";\n    }\n};\n\nint main() {\n    Adapter adapter;\n    while (true) {\n        fn::write(\"$\", \"\");\n        auto line = fn::input();\n        auto args = fn::split(line, ' ');\n        fn::write(line);\n\n        if      (args[0] == \"end\")  { break;                         }\n        else if (args[0] == \"size\") { adapter.size(args[1]);         }\n        else if (args[0] == \"show\") { adapter.show();                }\n        else                        { fn::write(\"Comando inv\u00e1lido\"); }\n    }\n}"
+        }
+    ]
+}
