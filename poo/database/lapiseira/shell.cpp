@@ -1,3 +1,5 @@
+/*Reltorio de Atividade:
+Realizei a atividade depois de ver o video da resolucao em sala*/
 #include <iostream>
 #include <list>
 #include <sstream>
