@@ -3,6 +3,7 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <cmath>
 using namespace std;
 
 template <typename CONTAINER, typename FN>
@@ -20,9 +21,10 @@ enum class Label {
 
 string labelToString(Label label){
     switch (label){
-    case Label::GIVE: return "give";
-    case Label::PLUS: return "plus";
-    case Label::TAKE: return "take";
+        case Label::GIVE: return "give";
+        case Label::PLUS: return "plus";
+        case Label::TAKE: return "take";
+        default: return "unknown";
     }
 }
 
@@ -55,7 +57,6 @@ class Operation{
 
     string str(){
         stringstream ss;
-
         ss << "id:" << this->id << " " << labelToString(label) << ":" << this->name << " " 
         << this->value;
         return ss.str();
@@ -81,8 +82,8 @@ class Client{
 
     
     void addOperation(shared_ptr<Operation> op){
-         operations.push_back(op);
-    }
+        operations.push_back(op);
+   }
 
     int getBalance() const {
         int balance = 0;
@@ -103,8 +104,12 @@ class Client{
 
     string str() const{
         stringstream ss;
-        ss << name << " " <<getBalance() << "/" << this->limite <<  " [" << map_join(operations, [](shared_ptr<Operation> op) { return op->str(); }) << "]";
+        ss << name << " " << getBalance() << "/" << this->limite;
         return ss.str();
+    }
+
+    string getOperations() const {
+        return map_join(operations, [](shared_ptr<Operation> op) { return op->str(); }, "\n");
     }
 };
 
@@ -125,22 +130,25 @@ class Agiota{
 
     void show() {
         for (auto& [name, client] : alive) {
-            cout << ":) " << client->getName() << " " << client->getBalance() << "/" << client->getLimite() << endl;
+            cout << ":) " << client->str() << endl;
+        }
+        for (auto& [name, client] : dead) {
+            cout << ":( " << client->str() << endl;
         }
         for (auto& op : operations) {
             cout << "+ " << op->str() << endl;
         }
     }
     
-    
-
     void showClient(string name) {
         if (alive.count(name)) {
             auto client = alive[name];
-            cout << client->getName() << " " << client->getBalance() << "/" << client->getLimite() << endl;
+            cout << client->str() << endl;
+            cout << client->getOperations() << endl;
         } else if (dead.count(name)) {
             auto client = dead[name];
-            cout << "@" << client->getName() << " " << client->getBalance() << "/" << client->getLimite() << endl;
+            cout << "@" << client->str() << endl;
+            cout << client->getOperations() << endl;
         } else {
             cout << "fail: cliente nao existe\n";
         }
@@ -187,6 +195,26 @@ class Agiota{
         }
         dead[name] = alive[name];
         alive.erase(name);
+    }
+
+    void plus() {
+        list<string> toKill;
+        for (auto& [name, client] : alive) {
+            int currentBalance = client->getBalance();
+            int interest = static_cast<int>(ceil(currentBalance * 0.1)); // Arredonda para cima
+            auto op = make_shared<Operation>(nextOpId++, name, Label::PLUS, interest);
+            client->addOperation(op);
+            operations.push_back(op);
+
+            if (!client->isAlive()) {
+                toKill.push_back(name);
+            }
+        }
+
+        for (const auto& name : toKill) {
+            dead[name] = alive[name];
+            alive.erase(name);
+        }
     }
 };
 
@@ -235,6 +263,7 @@ int main() {
             agiota.take(name, value);
         }
         else if(cmd == "plus") {
+            agiota.plus();
         }
         else {
             cout << "fail: comando invalido\n";
