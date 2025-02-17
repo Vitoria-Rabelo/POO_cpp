@@ -85,17 +85,18 @@ class Client{
         operations.push_back(op);
    }
 
-    int getBalance() const {
-        int balance = 0;
-        for (const auto& op : operations) {
-            if (op->getLabel() == Label::GIVE) {
-                balance += op->getValue();
-            } else {
-                balance -= op->getValue();
-            }
+   int getBalance() const {
+    int balance = 0;
+    for (const auto& op : operations) {
+        if (op->getLabel() == Label::GIVE || op->getLabel() == Label::PLUS) {
+            balance += op->getValue();
+        } else if (op->getLabel() == Label::TAKE) {
+            balance -= op->getValue();
         }
-        return balance;
     }
+    return balance;
+}
+
     
 
     bool isAlive() const{
@@ -121,12 +122,13 @@ class Agiota{
 
  public:
     void addClient(string name, int limite) {
-        if (alive.count(name) || dead.count(name)) {
+        if (alive.count(name) > 0 || dead.count(name) > 0) {
             cout << "fail: cliente ja existe\n";
             return;
         }
         alive[name] = make_shared<Client>(name, limite);
     }
+
 
     void show() {
         for (auto& [name, client] : alive) {
@@ -189,33 +191,54 @@ class Agiota{
     }
 
     void kill(string name) {
-        if (!alive.count(name)) {
+        if (alive.count(name)) {  
+            dead[name] = alive[name];  
+            alive.erase(name);
+        } else if (dead.count(name)) {  
+        } else {
+            cout << "fail: cliente nao existe\n";
+        }
+    }
+    
+    
+    
+
+
+    
+    void pushOperation(const string& name, Label label, int value) {
+        if (alive.find(name) == alive.end()) {
             cout << "fail: cliente nao existe\n";
             return;
         }
-        dead[name] = alive[name];
-        alive.erase(name);
-    }
-
-    void plus() {
-        list<string> toKill;
-        for (auto& [name, client] : alive) {
-            int currentBalance = client->getBalance();
-            int interest = static_cast<int>(ceil(currentBalance * 0.1)); // Arredonda para cima
-            auto op = make_shared<Operation>(nextOpId++, name, Label::PLUS, interest);
-            client->addOperation(op);
-            operations.push_back(op);
-
-            if (!client->isAlive()) {
-                toKill.push_back(name);
-            }
-        }
-
-        for (const auto& name : toKill) {
-            dead[name] = alive[name];
+        
+        auto op = make_shared<Operation>(nextOpId++, name, label, value);
+        auto client = alive[name];
+    
+        client->addOperation(op);
+        operations.push_back(op);
+    
+        if (!client->isAlive()) {
+            dead[name] = client;
             alive.erase(name);
         }
     }
+    
+    
+
+    void plus() {
+    
+        list<string> clientes;
+        for (auto& [name, _] : alive) {
+            clientes.push_back(name);
+        }
+        
+        for (const auto& name : clientes) {
+            int juros = ceil(alive[name]->getBalance() * 0.1);
+            pushOperation(name, Label::PLUS, juros);
+        }
+    }
+    
+    
 };
 
 int main() {
