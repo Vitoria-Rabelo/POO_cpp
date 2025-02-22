@@ -76,14 +76,15 @@ Significado das tags nas questões:
 - [ ] `@cinema      :test`[Gerenciando reservas e cancelamentos de uma sala de cinema](https://github.com/qxcodepoo/arcade/blob/master/base/cinema/Readme.md)
 - [ ] `@junkfood    :test`[Comprando comida cara e duvidosa](https://github.com/qxcodepoo/arcade/blob/master/base/junkfood/Readme.md)
 
-### ArrayList III - Composição e Enum
+### ArrayList III - CRUD, Composição e Enum
 
-- [ ] `@contato     :test`[Gerenciando telefones de um contato](https://github.com/qxcodepoo/arcade/blob/master/base/contato/Readme.md)
+- [ ] `@enumeracao  :test`[Exemplo de uso de uma classe que funciona como Enumeração](https://github.com/qxcodepoo/arcade/blob/master/base/enumeracao/Readme.md)
 - [ ] `@porquinho   :test`[Guardando moedas e itens em um cofrinho](https://github.com/qxcodepoo/arcade/blob/master/base/porquinho/Readme.md)
 - [ ] `@tarifas     :test`[Operações de saque, depósito, extrato](https://github.com/qxcodepoo/arcade/blob/master/base/tarifas/Readme.md)
 
-### Mapas && Exceções
+### CRUD com mapas e vetores
 
+- [ ] `@contato     :test`[Gerenciando telefones de um contato](https://github.com/qxcodepoo/arcade/blob/master/base/contato/Readme.md)
 - [ ] `@agenda      :test`[Gerencie os vários contatos de uma agenda](https://github.com/qxcodepoo/arcade/blob/master/base/agenda/Readme.md)
 - [ ] `@agiota      :test`[Gerencie os empŕestimos do agiota](https://github.com/qxcodepoo/arcade/blob/master/base/agiota/Readme.md)
 
