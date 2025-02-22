@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <cmath>
+#include <algorithm>
 using namespace std;
 
 template <typename CONTAINER, typename FN>
@@ -16,160 +17,158 @@ string map_join(const CONTAINER& container, FN fn, string sep = ", ") {
 }
 
 enum class Label {
-    GIVE , TAKE, PLUS
+    GIVE, TAKE, PLUS
 };
 
-string labelToString(Label label){
-    switch (label){
+string labelToString(Label label) {
+    switch (label) {
         case Label::GIVE: return "give";
-        case Label::PLUS: return "plus";
         case Label::TAKE: return "take";
+        case Label::PLUS: return "plus";
         default: return "unknown";
     }
 }
 
-class Operation{
+class Operation {
     int id;
     string name;
     Label label;
     int value;
 
- public:
+public:
+    Operation(int id, string name, Label label, int value) : id(id), name(name), label(label), value(value) {}
 
-    Operation(int id, string name, Label label, int value): id(id), name(name), 
-    label(label), value(value){}
+    int getId() const { return id; }
+    string getName() const { return name; }
+    int getValue() const { return value; }
+    Label getLabel() const { return label; }
 
-    int getId(){
-        return id;
-    }
-
-    string getName(){
-        return name;
-    }
-
-    int getValue(){
-        return value;
-    }
-
-    Label getLabel(){
-        return label;
-    }
-
-    string str(){
+    string str() const {
         stringstream ss;
-        ss << "id:" << this->id << " " << labelToString(label) << ":" << this->name << " " 
-        << this->value;
+        ss << "id:" << id << " " << labelToString(label) << ":" << name << " " << value;
         return ss.str();
     }
-
 };
 
-class Client{
+class Client {
     string name;
     int limite;
     list<shared_ptr<Operation>> operations;
- public:
 
-    Client(string name, int limite): name(name), limite(limite){}
-    
-    string getName(){
-        return name;
-    }
+public:
+    Client(string name, int limite) : name(name), limite(limite) {}
 
-    int getLimite(){
-        return limite;
-    }
+    string getName() const { return name; }
+    int getLimite() const { return limite; }
 
-    
-    void addOperation(shared_ptr<Operation> op){
+    void addOperation(shared_ptr<Operation> op) {
         operations.push_back(op);
-   }
+    }
 
-   int getBalance() const {
-    int balance = 0;
-    for (const auto& op : operations) {
-        if (op->getLabel() == Label::GIVE || op->getLabel() == Label::PLUS) {
-            balance += op->getValue();
-        } else if (op->getLabel() == Label::TAKE) {
-            balance -= op->getValue();
+    int getBalance() const {
+        int balance = 0;
+        for (const auto& op : operations) {
+            if (op->getLabel() == Label::GIVE || op->getLabel() == Label::PLUS)
+                balance += op->getValue();
+            else if (op->getLabel() == Label::TAKE)
+                balance -= op->getValue();
         }
-    }
-    return balance;
-}
-
-    
-
-    bool isAlive() const{
-        return getBalance() >= -limite;
+        return balance;
     }
 
-    string str() const{
+    bool isAlive() const { return getBalance() >= -limite; }
+
+    string str() const {
         stringstream ss;
-        ss << name << " " << getBalance() << "/" << this->limite;
+        ss << name << " " << getBalance() << "/" << limite;
         return ss.str();
     }
 
-    string getOperations() const {
-        return map_join(operations, [](shared_ptr<Operation> op) { return op->str(); }, "\n");
+    list<shared_ptr<Operation>> getOperations() const {
+        return operations;
     }
 };
 
-class Agiota{
+class Agiota {
     map<string, shared_ptr<Client>> alive;
     map<string, shared_ptr<Client>> dead;
     list<shared_ptr<Operation>> operations;
+    list<shared_ptr<Operation>> deadOperations;
     int nextOpId = 0;
 
- public:
+public:
     void addClient(string name, int limite) {
-        if (alive.count(name) > 0 || dead.count(name) > 0) {
+        if (alive.count(name) || dead.count(name)) {
             cout << "fail: cliente ja existe\n";
             return;
         }
         alive[name] = make_shared<Client>(name, limite);
     }
 
+    void show() const {
+        stringstream ss;
 
-    void show() {
-        for (auto& [name, client] : alive) {
-            cout << ":) " << client->str() << endl;
-        }
-        for (auto& [name, client] : dead) {
-            cout << ":( " << client->str() << endl;
-        }
-        for (auto& op : operations) {
-            cout << "+ " << op->str() << endl;
-        }
+        // Ordena e exibe clientes vivos
+        vector<shared_ptr<Client>> clientesOrdenados;
+        for (const auto& [_, client] : alive)
+            clientesOrdenados.push_back(client);
+        sort(clientesOrdenados.begin(), clientesOrdenados.end(),
+             [](const shared_ptr<Client>& a, const shared_ptr<Client>& b) {
+                 return a->getName() < b->getName();
+             });
+        for (const auto& cliente : clientesOrdenados)
+            ss << ":) " << cliente->str() << endl;
+
+        // Exibe operações na ordem global
+        for (const auto& op : operations)
+            ss << "+ " << op->str() << endl;
+
+        // Ordena e exibe clientes mortos
+        vector<shared_ptr<Client>> clientesOrdenadosMortos;
+        for (const auto& [_, client] : dead)
+            clientesOrdenadosMortos.push_back(client);
+        sort(clientesOrdenadosMortos.begin(), clientesOrdenadosMortos.end(),
+             [](const shared_ptr<Client>& a, const shared_ptr<Client>& b) {
+                 return a->getName() < b->getName();
+             });
+        for (const auto& cliente : clientesOrdenadosMortos)
+            ss << ":( " << cliente->str() << endl;
+
+        // Exibe operações dos clientes mortos
+        for (const auto& op : deadOperations)
+            ss << "- " << op->str() << endl;
+
+        cout << ss.str();
     }
-    
-    void showClient(string name) {
+
+    void showClient(string name) const {
         if (alive.count(name)) {
-            auto client = alive[name];
+            auto client = alive.at(name);
             cout << client->str() << endl;
-            cout << client->getOperations() << endl;
+            for (const auto& op : client->getOperations())
+                cout << op->str() << endl;
         } else if (dead.count(name)) {
-            auto client = dead[name];
+            auto client = dead.at(name);
             cout << "@" << client->str() << endl;
-            cout << client->getOperations() << endl;
+            for (const auto& op : client->getOperations())
+                cout << op->str() << endl;
         } else {
             cout << "fail: cliente nao existe\n";
         }
     }
-    
 
     void give(string name, int value) {
-        if (alive.find(name) == alive.end()) {
-            cout << "fail: cliente nao existe" << endl;
+        if (!alive.count(name)) {
+            cout << "fail: cliente nao existe\n";
             return;
         }
-        
+
         auto client = alive[name];
-        
         if (client->getBalance() + value > client->getLimite()) {
-            cout << "fail: limite excedido" << endl;
+            cout << "fail: limite excedido\n";
             return;
         }
-    
+
         auto op = make_shared<Operation>(nextOpId++, name, Label::GIVE, value);
         client->addOperation(op);
         operations.push_back(op);
@@ -180,6 +179,7 @@ class Agiota{
             cout << "fail: cliente nao existe\n";
             return;
         }
+
         auto op = make_shared<Operation>(nextOpId++, name, Label::TAKE, value);
         operations.push_back(op);
         alive[name]->addOperation(op);
@@ -187,63 +187,68 @@ class Agiota{
         if (!alive[name]->isAlive()) {
             dead[name] = alive[name];
             alive.erase(name);
+
+            operations.remove_if([&](const shared_ptr<Operation>& op) {
+                if (op->getName() == name) {
+                    deadOperations.push_back(op);
+                    return true;
+                }
+                return false;
+            });
         }
     }
 
     void kill(string name) {
-        if (alive.count(name)) {  
-            dead[name] = alive[name];  
-            alive.erase(name);
-        } else if (dead.count(name)) {  
-        } else {
-            cout << "fail: cliente nao existe\n";
-        }
-    }
-    
-    
-    
-
-
-    
-    void pushOperation(const string& name, Label label, int value) {
-        if (alive.find(name) == alive.end()) {
+        if (!alive.count(name)) {
             cout << "fail: cliente nao existe\n";
             return;
         }
-        
-        auto op = make_shared<Operation>(nextOpId++, name, label, value);
+
         auto client = alive[name];
-    
-        client->addOperation(op);
-        operations.push_back(op);
-    
-        if (!client->isAlive()) {
-            dead[name] = client;
-            alive.erase(name);
-        }
+        dead[name] = client;
+        alive.erase(name);
+
+        operations.remove_if([&](const shared_ptr<Operation>& op) {
+            if (op->getName() == name) {
+                deadOperations.push_back(op);
+                return true;
+            }
+            return false;
+        });
     }
-    
-    
 
     void plus() {
-    
         list<string> clientes;
-        for (auto& [name, _] : alive) {
+        for (const auto& [name, _] : alive)
             clientes.push_back(name);
-        }
-        
+
         for (const auto& name : clientes) {
-            int juros = ceil(alive[name]->getBalance() * 0.1);
-            pushOperation(name, Label::PLUS, juros);
+            auto client = alive[name];
+            int juros = ceil(client->getBalance() * 0.1);
+            auto op = make_shared<Operation>(nextOpId++, name, Label::PLUS, juros);
+            client->addOperation(op);
+            operations.push_back(op);
+
+            if (!client->isAlive()) {
+                dead[name] = client;
+                alive.erase(name);
+
+                operations.remove_if([&](const shared_ptr<Operation>& op) {
+                    if (op->getName() == name) {
+                        deadOperations.push_back(op);
+                        return true;
+                    }
+                    return false;
+                });
+            }
         }
     }
-    
-    
 };
+
 
 int main() {
     Agiota agiota;
-    while(true) {
+    while (true) {
         string line, cmd;
         getline(cin, line);
         cout << "$" << line << endl;
@@ -251,44 +256,36 @@ int main() {
         stringstream ss(line);
         ss >> cmd;
 
-        if(cmd == "end") {
+        if (cmd == "end") {
             break;
-        }
-        else if(cmd == "addCli") {
-             string name;
-            int limite {};
+        } else if (cmd == "addCli") {
+            string name;
+            int limite;
             ss >> name >> limite;
             agiota.addClient(name, limite);
-        }
-        else if(cmd == "show") {
+        } else if (cmd == "show") {
             agiota.show();
-        }
-        else if(cmd == "showCli") {
+        } else if (cmd == "showCli") {
             string name;
             ss >> name;
             agiota.showClient(name);
-        }
-        else if(cmd == "kill") {
+        } else if (cmd == "kill") {
             string name;
             ss >> name;
             agiota.kill(name);
-        }
-        else if(cmd == "give") {
+        } else if (cmd == "give") {
             string name;
             int value;
             ss >> name >> value;
             agiota.give(name, value);
-        }
-        else if(cmd == "take") {
+        } else if (cmd == "take") {
             string name;
             int value;
             ss >> name >> value;
             agiota.take(name, value);
-        }
-        else if(cmd == "plus") {
+        } else if (cmd == "plus") {
             agiota.plus();
-        }
-        else {
+        } else {
             cout << "fail: comando invalido\n";
         }
     }
