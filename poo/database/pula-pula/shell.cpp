@@ -14,6 +14,46 @@ string map_join(const CONTAINER& c, FUNC f, string sep) {
     return ss.str();
 }
 
+class Kid{
+    int age;
+    string name;
+
+public:
+    Kid(string name, int age) : name(name), age(age){}
+
+    string getName() const {
+        return name;
+    }
+    int getAge(){
+        return age;
+    }
+    string str()  {
+        stringstream ss;
+        ss << name << ":" << age;
+        return ss.str();
+    }
+
+};
+
+class Trampoline{
+    list<Kid> playing;
+    list<Kid>  waiting;
+
+public:
+    Trampoline() {};
+
+    void arrive(Kid kid){       
+        waiting.push_back(kid);
+    }
+
+    void enter(){
+        if(waiting.size() > 0){
+            playing.push_back(waiting.front());
+            waiting.pop_front();
+        }
+    }
+
+};
 
 int main() {
 
