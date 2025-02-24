@@ -2,6 +2,7 @@
 #include <memory>
 #include <sstream>
 #include <list>
+
 using namespace std;
 
 template<class CONTAINER, class FUNC>
@@ -14,48 +15,65 @@ string map_join(const CONTAINER& c, FUNC f, string sep) {
     return ss.str();
 }
 
-class Kid{
-    int age;
+class Kid {
     string name;
+    int age;
 
 public:
-    Kid(string name, int age) : name(name), age(age){}
+    Kid(string name, int age) : name(name), age(age) {}
 
     string getName() const {
         return name;
     }
-    int getAge(){
+    
+    int getAge() const {
         return age;
     }
-    string str()  {
+
+    string str() const {
         stringstream ss;
         ss << name << ":" << age;
         return ss.str();
     }
-
 };
 
-class Trampoline{
+class Trampoline {
     list<Kid> playing;
-    list<Kid>  waiting;
+    list<Kid> waiting;
 
 public:
-    Trampoline() {};
+    Trampoline() {}
 
-    void arrive(Kid kid){       
-        waiting.push_back(kid);
+    void arrive(Kid kid) {       
+        waiting.push_front(kid);
     }
 
-    void enter(){
-        if(waiting.size() > 0){
-            playing.push_back(waiting.front());
-            waiting.pop_front();
+    void enter() {
+        if (!waiting.empty()) {
+            playing.push_back(waiting.back());
+            waiting.pop_back();
+        }
+    }
+    
+
+    void leave() {
+        if (!playing.empty()) {
+            playing.pop_front();
         }
     }
 
+    void show() {
+        cout << "["
+             << map_join(waiting, [](const Kid& kid) { return kid.str(); }, ", ")
+             << "] => ["
+             << map_join(playing, [](const Kid& kid) { return kid.str(); }, ", ")
+             << "]"
+             << endl;
+    }
 };
 
 int main() {
+    Trampoline trampoline;
 
     while (true) {
         string line, cmd;
@@ -68,15 +86,16 @@ int main() {
         if (cmd == "end") {
             break;
         } else if (cmd == "show") {
+            trampoline.show();
         } else if (cmd == "arrive") {
-            // string name;
-            // int age;
-            // ss >> name >> age;
+            string name;
+            int age;
+            ss >> name >> age;
+            trampoline.arrive(Kid(name, age));
         } else if (cmd == "enter") {
+            trampoline.enter();
         } else if (cmd == "leave") {
-        } else if (cmd == "remove") {
-            // string name;
-            // ss >> name;
+            trampoline.leave();
         } else {
             cout << "fail: comando invalido" << endl;
         }

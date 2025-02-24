@@ -16,6 +16,7 @@ tasks:
   tamagotchi: '{cov:100, aut:0, hab:0, idx:0}'
   budega: '{cov:100, aut:0, hab:0, idx:0}'
   lapiseira: '{cov:85, aut:0, hab:0, idx:0}'
+  pula-pula: '{cov:40, aut:0, hab:0, idx:0}'
   cinema: '{cov:100, aut:0, hab:0, idx:0}'
   junkfood: '{cov:100, aut:0, hab:0, idx:0}'
 flags:
