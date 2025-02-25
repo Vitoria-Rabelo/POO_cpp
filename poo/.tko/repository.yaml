@@ -20,6 +20,7 @@ tasks:
   pula-pula: '{cov:100, aut:0, hab:0, idx:0}'
   cinema: '{cov:100, aut:0, hab:0, idx:0}'
   junkfood: '{cov:100, aut:0, hab:0, idx:0}'
+  contato: '{cov:100, aut:0, hab:0, idx:0}'
   agiota: '{cov:90, aut:0, hab:0, idx:0}'
 flags:
   minimum: 0
@@ -31,5 +32,5 @@ flags:
   devel: 0
 new_items: []
 lang: cpp
-index: contato
+index: agenda
 database: database
