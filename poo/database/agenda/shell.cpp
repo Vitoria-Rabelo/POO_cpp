@@ -1,208 +1,168 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include <algorithm>
+#include <utility>
+#include <iomanip>
+#include <memory>
+#include <list>
 using namespace std;
 
-template <typename CONTAINER, typename FUNC>
-string map_join(const CONTAINER& cont, FUNC func, string sep = " ") {
+template <typename CONTAINER, typename FN>
+string map_join(const CONTAINER& container, FN fn, string sep = ", ", string prefix = "[", string suffix = "]") {
     stringstream ss;
-    for (auto it = cont.begin(); it != cont.end(); it++) {
-        ss << (it == cont.begin() ? "" : sep);
-        ss << func(*it);
+    for (auto it = container.begin(); it != container.end(); ++it) {
+        ss << (it != container.begin() ? sep : "") << fn(*it);
     }
-    return ss.str();
+    return prefix + ss.str() + suffix;
 }
 
-pair<string, string> decodeFone(string fone) {
-    stringstream ss(fone);
-    string id, number;
-    getline(ss, id, ':');
-    getline(ss, number);
-    return {id, number};
-}
-
-class Fone {
-    string id;
-    string number;
-public:
-    Fone(string id = "", string number = "") : id(id), number(number) {}
-
-    string getId() { return id; }
-    string getNumber() { return number; }
-
-    bool isValid() {
-        string validos = "0123456789().-";
-        for (char c : number) {
-            if (validos.find(c) == string::npos) {
-                cout << "fail: invalid number" << endl;
-                return false;
-            }
-        }
-        return true;
-    }
-
-    string toString() { return id + ":" + number; }
+enum class Moeda{
+    C5, C10, C25, C50, R1
 };
 
-class Contact {
-    string name;
-    bool favorited;
-    vector<Fone> fones;
+Moeda stringToMoeda(const string& label) {
+    if (label == "C5") return Moeda::C5;
+    if (label == "C10") return Moeda::C10;
+    if (label == "C25") return Moeda::C25;
+    if (label == "C50") return Moeda::C50;
+    if (label == "R1") return Moeda::R1;
+    throw invalid_argument("fail: moeda inválida");
+}
+
+class Coin{
+    Moeda moeda;
+    int volume;
+    string label;
+
+    static float getMoeda(Moeda moeda){
+        switch(moeda){
+            case Moeda::C5: return 0.05;
+            case Moeda::C10: return 0.10;
+            case Moeda::C25: return 0.25;
+            case Moeda::C50: return 0.50;
+            case Moeda::R1: return 1.00;
+            default : 
+                return 0.0;
+        }
+    }
+    
 public:
-    Contact(string name = "") : name(name), favorited(false) {}
+    Coin(Moeda moeda, int volume = 0, string label = "") : moeda(moeda), volume(volume), label(label) {}
 
-    string getName() { return name; }
-    void setName(string name) { this->name = name; }
-    bool isFavorited() { return favorited; }
-    void toggleFavorited() { favorited = !favorited; }
-    vector<Fone> getFones() { return fones; }
-
-    void addFone(string id, string number) {
-        Fone fone(id, number);
-        if (fone.isValid()) {
-            fones.push_back(fone);
-        }
+    double getValue() const{
+       return getMoeda(moeda);
     }
 
-    void rmFone(int index) {
-        if (index >= 0 && index < (int)fones.size()) {
-            fones.erase(fones.begin() + index);
-        }
+    int getVolume(){
+        return this->volume;
     }
 
-    string toString() {
+    string getLabel() const{
+        return this->label;
+    }
+};
+
+class Item {
+    string label;
+    int volume;
+public:
+    Item(string label = "", int volume = 0) : label(label), volume(volume) {}
+
+    string getLabel() const{ 
+        return label;
+     }
+    int getVolume() const{ 
+        return volume; 
+    }
+
+    void setLabel(string label){
+        this->label = label;
+    }
+
+    void setVolume(int volume){
+        this->volume = volume;
+    }
+
+    string toString() const{
         stringstream ss;
-        ss << (favorited ? "@ " : "- ") << name << " [" 
-           << map_join(fones, [](Fone f) { return f.toString(); }, ", ") << "]";
+        ss << label << ":" << volume;
         return ss.str();
     }
 };
-
-class Agenda {
-    vector<Contact> contacts;
-
-    int findPosByName(string name) {
-        for (size_t i = 0; i < contacts.size(); i++) {
-            if (contacts[i].getName() == name)
-                return i;
-        }
-        return -1;
-    }
+class Pig{
+    bool broken;
+    list<Coin> coins;
+    list<Item> items;
+    int volumeMax;
 
 public:
-    void addContact(string name, vector<Fone> fones) {
-        int pos = findPosByName(name);
-        if (pos != -1) {
-            for (auto& f : fones) {
-                contacts[pos].addFone(f.getId(), f.getNumber());
-            }
-        } else {
-            Contact contact(name);
-            for (auto& f : fones) {
-                contact.addFone(f.getId(), f.getNumber());
-            }
-            contacts.push_back(contact);
-            sort(contacts.begin(), contacts.end(), [](Contact a, Contact b) {
-                return a.getName() < b.getName();
-            });
-        }
+    Pig(int volumeMax = 0) : broken(false), volumeMax(volumeMax){};
+
+    void addCoin(Coin coin){
+        coins.push_back(coin);
     }
 
-    Contact* getContact(string name) {
-        int pos = findPosByName(name);
-        if (pos != -1) return &contacts[pos];
-        return nullptr;
+    void addItem(Item item){
+        items.push_back(item);
     }
 
-    void rmContact(string name) {
-        int pos = findPosByName(name);
-        if (pos != -1) {
-            contacts.erase(contacts.begin() + pos);
-        }
+    void breakPig(){
+        broken = true;
     }
 
-    vector<Contact> search(string pattern) {
-        vector<Contact> result;
-        for (auto& c : contacts) {
-            if (c.toString().find(pattern) != string::npos) {
-                result.push_back(c);
-            }
-        }
-        return result;
-    }
-
-    vector<Contact> getFavorited() {
-        vector<Contact> result;
-        for (auto& c : contacts) {
-            if (c.isFavorited()) {
-                result.push_back(c);
-            }
-        }
-        return result;
-    }
-
-    vector<Contact> getContacts() { return contacts; }
-
-    string toString() {
-        return map_join(contacts, [](Contact c) { return c.toString(); }, "\n");
+    void show() const{
+        if(broken == true){
+            cout << "state=broken ";
+        } 
+        cout << "state=intact ";
+        cout << ": coins=" << map_join(coins, [](const Coin& coin){return coin.getLabel();});
+        cout <<  " : items=" << map_join(items, [](const Item& item){return item.toString();}) ;
+        cout << " : value=";
+        cout << volumeMax << endl;
     }
 };
-
 int main() {
-    Agenda agenda;
-    string line, cmd;
+    Pig pig;
+    Coin c(Moeda::C50, 1, "50 centavos");;
+    Item item;
     while (true) {
+        string line, cmd;
         getline(cin, line);
         cout << "$" << line << endl;
+
         stringstream ss(line);
         ss >> cmd;
 
         if (cmd == "end") {
             break;
-        } else if (cmd == "add") {
-            string name, token;
-            ss >> name;
-            vector<Fone> fones;
-            while (ss >> token) {
-                auto [id, number] = decodeFone(token);
-                fones.push_back(Fone(id, number));
-            }
-            agenda.addContact(name, fones);
+        } else if (cmd == "init") {
+         int volumeMax;
+         ss >> volumeMax;
+         pig = Pig(volumeMax);
         } else if (cmd == "show") {
-            cout << agenda.toString() << endl;
-        } else if (cmd == "rmFone") {
-            string name;
-            int index;
-            ss >> name >> index;
-            Contact* contact = agenda.getContact(name);
-            if (contact) {
-                contact->rmFone(index);
+            pig.show();
+        } else if (cmd == "break") {
+        } else if (cmd == "addCoin") {
+            string label;
+             ss >> label;
+             try {
+                Moeda moeda = stringToMoeda(label);
+                pig.addCoin(Coin(moeda, 0, label));
+            } catch (const exception& e) {
+                cout << e.what() << endl;
             }
-        }else if ( cmd == "rm"){
-            string name;
-            ss >> name;
-            agenda.rmContact(name);
-        } else if (cmd == "search") {
-            string pattern;
-            ss >> pattern;
-            cout << map_join(agenda.search(pattern), [](Contact c) { return c.toString(); }, "\n") << endl;
-        } else if (cmd == "tfav") {
-            string name;
-            ss >> name;
-            Contact* contact = agenda.getContact(name);
-            if (contact) {
-                contact->toggleFavorited();
-            }
-        } else if (cmd == "showFav") {
-            cout << map_join(agenda.getFavorited(), [](Contact c) { return c.toString(); }, "\n") << endl;
-
-        }else if (cmd == "favs") {
-            vector<Contact> favs = agenda.getFavorited();
-            cout << map_join(favs, [](Contact c) { return c.toString(); }, "\n") << endl;
-        }
-        else {
-            cout << "fail: comando invalido" << endl;
+        } else if (cmd == "addItem") {
+            // string label;
+            // int volume;
+            // ss >> label >> volume;
+        } else if (cmd == "extractItems") {
+            // Obtenha os itens com o método extractItems
+            // e imprima os itens obtidos
+        } else if (cmd == "extractCoins") {
+            // Obtenha as moedas com o método extractCoins
+            // e imprima as moedas obtidas
+        } else {
+            cout << "fail: invalid command\n";
         }
     }
 }
