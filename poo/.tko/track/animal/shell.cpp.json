@@ -1,0 +1,8 @@
+{
+    "patches": [
+        {
+            "label": "2025-02-25_21-36-24",
+            "content": "#include \"fn.hpp\"\n#include \"student.hpp\"\n\nint main () {\n    Student stu;\n\n    while (true) {\n        fn::write(\"$\", \"\");\n        auto line = fn::input();\n        auto args = fn::split(line, ' ');\n\n        fn::write(line); //test echo\n\n        if      (args[0] == \"end\"  ) { break;                               }\n\n        else if (args[0] == \"init\" ) { stu.init(args[1], args[2]);     }\n        else if (args[0] == \"grow\" ) { stu.grow(+args[1]);                  }\n        else if (args[0] == \"noise\") { stu.noise();              }\n        else if (args[0] == \"show\" ) { stu.show();               }\n\n        else                         { fn::write(\"fail: comando invalido\"); }\n    }\n}\n"
+        }
+    ]
+}
