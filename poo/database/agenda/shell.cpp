@@ -1,264 +1,208 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include <utility>
-#include <iomanip>
-#include <memory>
-#include <list>
+#include <algorithm>
 using namespace std;
 
-template <typename CONTAINER, typename FN>
-string map_join(const CONTAINER& container, FN fn, string sep = ", ", string prefix = "[", string suffix = "]") {
+template <typename CONTAINER, typename FUNC>
+string map_join(const CONTAINER& cont, FUNC func, string sep = " ") {
     stringstream ss;
-    for (auto it = container.begin(); it != container.end(); ++it) {
-        ss << (it != container.begin() ? sep : "") << fn(*it);
+    for (auto it = cont.begin(); it != cont.end(); it++) {
+        ss << (it == cont.begin() ? "" : sep);
+        ss << func(*it);
     }
-    return prefix + ss.str() + suffix;
+    return ss.str();
 }
 
-enum class Moeda{
-    C10 = 1,
-    C25 = 2, 
-    C50 = 3, 
-    R1 = 4
-
-};
-
-Moeda stringToMoeda(const string& label) {
-    if (label == "10") return Moeda::C10;
-    if (label == "25") return Moeda::C25;
-    if (label == "50") return Moeda::C50;
-    if (label == "100") return Moeda::R1;
-    throw invalid_argument("fail: moeda inválida");
+pair<string, string> decodeFone(string fone) {
+    stringstream ss(fone);
+    string id, number;
+    getline(ss, id, ':');
+    getline(ss, number);
+    return {id, number};
 }
 
-class Coin{
-    Moeda moeda;
-    int volume;
-    string label;
-
-    static float getMoeda(Moeda moeda){
-        switch(moeda){
-            case Moeda::C10: return 0.10;
-            case Moeda::C25: return 0.25;
-            case Moeda::C50: return 0.50;
-            case Moeda::R1: return 1.00;
-            default : 
-                return 0.0;
-        }
-    }
-    
+class Fone {
+    string id;
+    string number;
 public:
-    Coin(Moeda moeda, int volume, string label = "") : moeda(moeda), volume(volume), label(label) {}
+    Fone(string id = "", string number = "") : id(id), number(number) {}
 
-    double getValue() const{
-       return getMoeda(moeda);
-    }
+    string getId() { return id; }
+    string getNumber() { return number; }
 
-    int getVolume() const{
-        return this->volume;
-    }
-
-    static int getVolume(Moeda moeda) {
-        switch(moeda) {
-            case Moeda::C10: return 1;
-            case Moeda::C25: return 2;
-            case Moeda::C50: return 3;
-            case Moeda::R1: return 4;
-            default: return 0;
+    bool isValid() {
+        string validos = "0123456789().-";
+        for (char c : number) {
+            if (validos.find(c) == string::npos) {
+                cout << "fail: invalid number" << endl;
+                return false;
+            }
         }
+        return true;
     }
-    
 
-    string getLabel() const{
-        return this->label;
-    }
+    string toString() { return id + ":" + number; }
 };
 
-class Item {
-    string label;
-    int volume;
+class Contact {
+    string name;
+    bool favorited;
+    vector<Fone> fones;
 public:
-    Item(string label = "", int volume = 0) : label(label), volume(volume) {}
+    Contact(string name = "") : name(name), favorited(false) {}
 
-    string getLabel() const{ 
-        return label;
-     }
-    int getVolume() const{ 
-        return volume; 
+    string getName() { return name; }
+    void setName(string name) { this->name = name; }
+    bool isFavorited() { return favorited; }
+    void toggleFavorited() { favorited = !favorited; }
+    vector<Fone> getFones() { return fones; }
+
+    void addFone(string id, string number) {
+        Fone fone(id, number);
+        if (fone.isValid()) {
+            fones.push_back(fone);
+        }
     }
 
-    void setLabel(string label){
-        this->label = label;
+    void rmFone(int index) {
+        if (index >= 0 && index < (int)fones.size()) {
+            fones.erase(fones.begin() + index);
+        }
     }
 
-    void setVolume(int volume){
-        this->volume = volume;
-    }
-
-    string toString() const{
+    string toString() {
         stringstream ss;
-        ss << label << ":" << volume;
+        ss << (favorited ? "@ " : "- ") << name << " [" 
+           << map_join(fones, [](Fone f) { return f.toString(); }, ", ") << "]";
         return ss.str();
     }
 };
-class Pig{
-    bool broken;
-    list<Coin> coins;
-    list<Item> items;
-    int volumeMax;
+
+class Agenda {
+    vector<Contact> contacts;
+
+    int findPosByName(string name) {
+        for (size_t i = 0; i < contacts.size(); i++) {
+            if (contacts[i].getName() == name)
+                return i;
+        }
+        return -1;
+    }
 
 public:
-    Pig(int volumeMax = 0) : broken(false), volumeMax(volumeMax){};
-
-    int getTotalVolume() const {
-        int totalVolume = 0;
-        for(const auto& coin : coins) {
-            totalVolume += coin.getVolume();
-        }
-        for(const auto& item : items) {
-            totalVolume += item.getVolume();
-        }
-        return totalVolume;
-    }
-    
-
-    void addCoin(Coin coin){
-        if(broken == true){
-            cout << "fail: the pig is broken\n";
-            return;
-        }
-        if(getTotalVolume() + coin.getVolume() > volumeMax){
-            cout << "fail: the pig is full\n";
-            return;
-        }
-        coins.push_back(coin);
-    }
-
-    void addItem(Item item){
-        if(broken == true){
-            cout << "fail: the pig is broken\n";
-            return;
-        }
-        if(getTotalVolume() + item.getVolume() > volumeMax){
-            cout << "fail: the pig is full\n";
-            return;
-        }
-        items.push_back(item);
-    }
-
-    void breakPig(){
-        broken = true;
-    }
-
-    void extractCoins(){
-        if(broken == false){
-            cout << "fail: you must break the pig first\n" << "[]\n";
-            return;
-        }
-        cout << map_join(coins, [](const Coin& coin) {
-            stringstream ss;
-            ss << fixed << setprecision(2) << coin.getValue() << ":" << coin.getVolume();
-            return ss.str();
-        });
-        cout << endl;
-        coins.clear();
-       
-    }
-
-    void extractItems(){
-        if(broken == false){
-            cout << "fail: you must break the pig first\n" << "[]\n";
-            return;
-        }
-        cout << map_join(items, [](const Item& item){return item.toString();}) << endl ;
-        items.clear();
-    }
-
-    void show() const{
-        if(broken == true){
-            cout << "state=broken ";
-            cout << ": coins=" << map_join(coins, [](const Coin& coin) {
-                stringstream ss;
-                ss << fixed << setprecision(2) << coin.getValue() << ":" << coin.getVolume();
-                return ss.str();
+    void addContact(string name, vector<Fone> fones) {
+        int pos = findPosByName(name);
+        if (pos != -1) {
+            for (auto& f : fones) {
+                contacts[pos].addFone(f.getId(), f.getNumber());
+            }
+        } else {
+            Contact contact(name);
+            for (auto& f : fones) {
+                contact.addFone(f.getId(), f.getNumber());
+            }
+            contacts.push_back(contact);
+            sort(contacts.begin(), contacts.end(), [](Contact a, Contact b) {
+                return a.getName() < b.getName();
             });
-            cout <<  " : items=" << map_join(items, [](const Item& item){return item.toString();}) ;
-            cout << " : value=";
-            double moedaTotal = 0.0;
-                for (const auto& coin : coins) {
-                moedaTotal += coin.getValue();
-            }
-            cout << fixed << setprecision(2) << moedaTotal << " : volume=";
-            cout << "0/" << volumeMax << endl;
-            return;
-        } 
-        cout << "state=intact ";
-        cout << ": coins=" << map_join(coins, [](const Coin& coin) {
-            stringstream ss;
-            ss << fixed << setprecision(2) << coin.getValue() << ":" << coin.getVolume();
-            return ss.str();
-        });
-        cout <<  " : items=" << map_join(items, [](const Item& item){return item.toString();}) ;
-        cout << " : value=";
-        double moedaTotal = 0.0;
-            for (const auto& coin : coins) {
-            moedaTotal += coin.getValue();
         }
-        cout << fixed << setprecision(2) << moedaTotal << " : volume=";
-        int totalVolume = 0;
-            for (const auto& coin : coins) {
-                totalVolume += coin.getVolume();
+    }
+
+    Contact* getContact(string name) {
+        int pos = findPosByName(name);
+        if (pos != -1) return &contacts[pos];
+        return nullptr;
+    }
+
+    void rmContact(string name) {
+        int pos = findPosByName(name);
+        if (pos != -1) {
+            contacts.erase(contacts.begin() + pos);
+        }
+    }
+
+    vector<Contact> search(string pattern) {
+        vector<Contact> result;
+        for (auto& c : contacts) {
+            if (c.toString().find(pattern) != string::npos) {
+                result.push_back(c);
             }
-            for (const auto& item : items) {
-                totalVolume += item.getVolume();
+        }
+        return result;
+    }
+
+    vector<Contact> getFavorited() {
+        vector<Contact> result;
+        for (auto& c : contacts) {
+            if (c.isFavorited()) {
+                result.push_back(c);
             }
-        cout << totalVolume << "/" << volumeMax << endl;
+        }
+        return result;
+    }
+
+    vector<Contact> getContacts() { return contacts; }
+
+    string toString() {
+        return map_join(contacts, [](Contact c) { return c.toString(); }, "\n");
     }
 };
+
 int main() {
-    Pig pig;
-    Coin c(Moeda::C50, 1, "50 centavos");;
-    Item item;
+    Agenda agenda;
+    string line, cmd;
     while (true) {
-        string line, cmd;
         getline(cin, line);
         cout << "$" << line << endl;
-
         stringstream ss(line);
         ss >> cmd;
 
         if (cmd == "end") {
             break;
-        } else if (cmd == "init") {
-         int volumeMax;
-         ss >> volumeMax;
-         pig = Pig(volumeMax);
+        } else if (cmd == "add") {
+            string name, token;
+            ss >> name;
+            vector<Fone> fones;
+            while (ss >> token) {
+                auto [id, number] = decodeFone(token);
+                fones.push_back(Fone(id, number));
+            }
+            agenda.addContact(name, fones);
         } else if (cmd == "show") {
-            pig.show();
-        } else if (cmd == "break") {
-            pig.breakPig();
-        } else if (cmd == "addCoin") {
-            string label;
-            ss >> label;
-        try {
-            Moeda moeda = stringToMoeda(label);
-            int volume = Coin::getVolume(moeda); 
-            pig.addCoin(Coin(moeda, volume, label)); 
-        } catch (const exception& e) {
-            cout << e.what() << endl;
+            cout << agenda.toString() << endl;
+        } else if (cmd == "rmFone") {
+            string name;
+            int index;
+            ss >> name >> index;
+            Contact* contact = agenda.getContact(name);
+            if (contact) {
+                contact->rmFone(index);
+            }
+        }else if ( cmd == "rm"){
+            string name;
+            ss >> name;
+            agenda.rmContact(name);
+        } else if (cmd == "search") {
+            string pattern;
+            ss >> pattern;
+            cout << map_join(agenda.search(pattern), [](Contact c) { return c.toString(); }, "\n") << endl;
+        } else if (cmd == "tfav") {
+            string name;
+            ss >> name;
+            Contact* contact = agenda.getContact(name);
+            if (contact) {
+                contact->toggleFavorited();
+            }
+        } else if (cmd == "showFav") {
+            cout << map_join(agenda.getFavorited(), [](Contact c) { return c.toString(); }, "\n") << endl;
+
+        }else if (cmd == "favs") {
+            vector<Contact> favs = agenda.getFavorited();
+            cout << map_join(favs, [](Contact c) { return c.toString(); }, "\n") << endl;
         }
-        } else if (cmd == "addItem") {
-            string label;
-            int volume;
-            ss >> label >> volume;
-            pig.addItem(Item(label, volume));
-        } else if (cmd == "extractItems") {
-            pig.extractItems();
-        } else if (cmd == "extractCoins") {
-            pig.extractCoins();
-        } else {
-            cout << "fail: invalid command\n";
+        else {
+            cout << "fail: comando invalido" << endl;
         }
     }
 }
