@@ -101,6 +101,8 @@ public:
             balance += value;
         } else if (label == WITHDRAW || label == FEE) {
             balance -= value;
+        } else if(label == REVERSE){
+            balance += value;
         }
         Operation op(nextId++, label, value, balance);
         extract.push_back(op);
