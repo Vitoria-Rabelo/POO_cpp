@@ -10,6 +10,7 @@ expanded:
 - arraylist-ii---arrays-de-null
 - crud-com-mapas-e-vetores
 - arraylist-iii---crud-composição-e-enum
+- herança-i
 tasks:
   notebook: '{cov:100, aut:0, hab:0, idx:0}'
   motoca: '{cov:100, aut:0, hab:0, idx:0}'
@@ -20,7 +21,7 @@ tasks:
   pula-pula: '{cov:100, aut:0, hab:0, idx:0}'
   cinema: '{cov:100, aut:0, hab:0, idx:0}'
   junkfood: '{cov:100, aut:0, hab:0, idx:0}'
-  tarifas: '{cov:84, aut:0, hab:0, idx:0}'
+  tarifas: '{cov:100, aut:0, hab:0, idx:0}'
   contato: '{cov:100, aut:0, hab:0, idx:0}'
   agiota: '{cov:90, aut:0, hab:0, idx:0}'
 flags:

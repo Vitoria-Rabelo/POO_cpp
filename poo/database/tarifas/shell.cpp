@@ -183,7 +183,6 @@ public:
                         cout << "fail: index " << value << " is not a fee" << endl;
                     } else {
                         balanceManager.addOperation(REVERSE, it->getValue());
-                        balanceManager.addOperation(DEPOSIT, it->getValue());
                     }
                     goto next_value;
                 }
