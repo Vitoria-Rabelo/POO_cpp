@@ -75,6 +75,8 @@ public:
                 ss << "   error:" << setw(5) << value; 
                 break;
         }
+
+
         ss << ": " << setw(4) << balance;
         return ss.str();
     }
@@ -115,7 +117,7 @@ public:
         }
         else{
             vector<Operation> lastOps;
-        size_t limit = static_cast<size_t>(qtd);  // Converte qtd para size_t
+        size_t limit = static_cast<size_t>(qtd); 
 
         for (auto rit = extract.rbegin(); rit != extract.rend() && lastOps.size() < limit; ++rit) {
             lastOps.push_back(*rit);
@@ -125,6 +127,10 @@ public:
         }
         }
         
+    }
+
+    const list<Operation>& getExtract() const {
+        return extract;
     }
 
     void show() const {
@@ -160,11 +166,29 @@ public:
     }
 
     void extract(int qtd) {
-        if (qtd < 0) {
-            cout << "fail: invalid quantity" << endl;
-            return;
-        }
         balanceManager.extractBalance(qtd);
+    }
+
+    void reverse(const vector<int>& values) {
+        const list<Operation>& operations = balanceManager.getExtract();
+    
+        for (int value : values) {
+            auto it = operations.end();
+            while (it != operations.begin()) {
+                --it; 
+                if (it->getIndex() == value) {
+                    if (it->getLabel() != FEE) {
+                        cout << "fail: index " << value << " is not a fee" << endl;
+                    } else {
+                        balanceManager.addOperation(REVERSE, it->getValue());
+                        balanceManager.addOperation(DEPOSIT, it->getValue());
+                    }
+                    goto next_value;
+                }
+            }
+            cout << "fail: index " << value << " invalid" << endl;
+        next_value:;
+        }
     }
 
     void show() const {
@@ -207,7 +231,14 @@ int main() {
             int qtd;
             ss >> qtd;
             account.extract(qtd);
-        } else {
+        } else if(cmd == "reverse"){
+            vector<int> values;
+            int value;
+            while (ss >> value) { 
+                values.push_back(value);
+            }
+            account.reverse(values);
+        }else {
             cout << "fail: invalid command\n";
         }
     }
