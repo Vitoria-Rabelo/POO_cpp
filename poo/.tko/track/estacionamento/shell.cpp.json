@@ -1,0 +1,8 @@
+{
+    "patches": [
+        {
+            "label": "2025-03-09_23-46-43",
+            "content": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n#include <iomanip>\n\nusing namespace std;\n\nint main() {\n    \n    while (true) {\n        string line, cmd;\n        getline(cin, line);\n        cout << \"$\" << line << endl;\n\n        stringstream ss(line);\n        ss >> cmd;\n\n        if (cmd == \"end\") {\n            break;\n        } else if (cmd == \"show\") {\n        } else if (cmd == \"estacionar\") {\n            // string tipo, id;\n            // ss >> tipo >> id;\n        } else if (cmd == \"tempo\") {\n            // int tempo {};\n            // ss >> tempo;\n        } else if (cmd == \"pagar\") {\n            // string id;\n            // ss >> id;\n        } else {\n            cout << \"fail: comando invalido\" << endl;\n        }\n    }\n}\n"
+        }
+    ]
+}
