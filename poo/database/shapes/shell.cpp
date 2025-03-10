@@ -33,6 +33,14 @@ class Point2D {
     public:
         Point2D(double x = 0, double y = 0) : x(x), y(y) {};
 
+        double getX() const{
+            return this->x;
+        }
+
+        double getY() const{
+            return this->y;
+        }
+
         string str() const{
             stringstream ss;
             ss << fixed << setprecision(2) <<  "(" << x << ", " << y << ")";
@@ -67,15 +75,30 @@ class Circle : public Shape{
         }
 };
 
-class Reactangle : public Shape{
+class Rectangle : public Shape{
     Point2D p1;
     Point2D p2;
 
     public:
-        Reactangle(Point2D p1, Point2D p2) : p1(p1), p2(p2){};
+        Rectangle(Point2D p1, Point2D p2) : p1(p1), p2(p2){};
         double getArea() const override{
-            return abs(p1.x - p2.x) * abs(p1.y - p2.y);
+            return abs(p1.getX() - p2.getX()) * abs(p1.getY() - p2.getY());
         }
+
+        double getPerimeter() const override{
+            return 2 * (abs(p1.getX() - p2.getX()) + abs(p1.getY() - p2.getY()));
+        }
+
+        string getName() const override{
+            return "Rect: ";
+        }
+
+        string str() const override{
+            stringstream ss;
+            ss << getName() << "P1=" << p1.str() << " P2=" << p2.str();
+            return ss.str();
+        }
+
 };
 
 int main() {
@@ -105,10 +128,13 @@ int main() {
         else if (cmd == "rect") {
             double x1{}, y1{}, x2{}, y2{};
             ss >> x1 >> y1 >> x2 >> y2;
-            shapes.push_back(make_shared<Reactangle>(Point2D(x1, y1), Point2D(x2, y2)));
+            shapes.push_back(make_shared<Rectangle>(Point2D(x1, y1), Point2D(x2, y2)));
         }
         else if (cmd == "info") {
-            // Imprima as informações de área e perímetro de todas as formas
+            for(auto& s : shapes){
+                cout << s->getName() << "A=" << fixed << setprecision(2) << s->getArea()
+                << " P=" << fixed << setprecision(2) << s->getPerimeter() << endl;
+            }
         }
         else {
             cout << "fail: comando inválido" << '\n';
